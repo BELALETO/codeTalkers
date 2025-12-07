@@ -2,6 +2,12 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
+const {
+  googleClientID,
+  googleClientSecret,
+  githubClientID,
+  githubClientSecret
+} = require('./config');
 
 const local = new LocalStrategy(
   {
@@ -17,8 +23,8 @@ const local = new LocalStrategy(
 
 const google = new GoogleStrategy(
   {
-    clientID: process.env.GOOGLE_CLIENT_ID,
-    clientSecret: process.env.GOOGLE_CLIENT_SECRET,
+    clientID: googleClientID,
+    clientSecret: googleClientSecret,
     callbackURL: '/auth/google/callback'
   },
   (accessToken, refreshToken, profile, done) => {
@@ -30,8 +36,8 @@ const google = new GoogleStrategy(
 
 const github = new GitHubStrategy(
   {
-    clientID: process.env.GITHUB_CLIENT_ID,
-    clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    clientID: githubClientID,
+    clientSecret: githubClientSecret,
     callbackURL: '/auth/github/callback'
   },
   (accessToken, refreshToken, profile, done) => {
