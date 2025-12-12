@@ -2,6 +2,9 @@ const mongoose = require('mongoose');
 const { mongoURI, mongoUser, mongoPassword } = require('./config');
 
 const getConnectionString = () => {
+  if (!mongoURI || !mongoUser || !mongoPassword) {
+    throw new Error('MongoDB configuration variables are not set properly.');
+  }
   return mongoURI
     .replace('<USER>', encodeURIComponent(mongoUser))
     .replace('<PASSWORD>', encodeURIComponent(mongoPassword));

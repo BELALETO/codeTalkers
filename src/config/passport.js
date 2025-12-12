@@ -2,6 +2,8 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const GoogleStrategy = require('passport-google-oauth20').Strategy;
 const GitHubStrategy = require('passport-github2').Strategy;
+const User = require('../models/userModel');
+const AppError = require('../utils/appError');
 const {
   googleClientID,
   googleClientSecret,
@@ -14,10 +16,16 @@ const local = new LocalStrategy(
     usernameField: 'email',
     passwordField: 'password'
   },
-  (email, password, done) => {
-    // Implement your local authentication logic here
-    // For example, find the user in the database and verify the password
-    return done(null, false); // Replace with actual user object on success
+  async (email, password, done) => {
+    try {
+      const user = await User.findOne({ email }).select('+password');
+      if (!user || !(await user.correctPassword(password, user.password))) {
+        return done(new AppError('Incorrect email or password.', 404), false);
+      }
+      return done(null, user);
+    } catch (error) {
+      return done(error, false);
+    }
   }
 );
 
@@ -27,10 +35,23 @@ const google = new GoogleStrategy(
     clientSecret: googleClientSecret,
     callbackURL: '/auth/google/callback'
   },
-  (accessToken, refreshToken, profile, done) => {
-    // Implement your Google authentication logic here
-    // For example, find or create a user in the database based on the Google profile
-    return done(null, profile); // Replace with actual user object on success
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      let user = await User.findOne({ googleId: profile.id });
+
+      if (!user) {
+        user = await User.create({
+          googleId: profile.id,
+          email: profile.emails?.[0].value,
+          displayName: profile.displayName,
+          avatar: profile.photos?.[0].value
+        });
+      }
+
+      return done(null, user);
+    } catch (error) {
+      return done(error, false);
+    }
   }
 );
 
@@ -40,13 +61,28 @@ const github = new GitHubStrategy(
     clientSecret: githubClientSecret,
     callbackURL: '/auth/github/callback'
   },
-  (accessToken, refreshToken, profile, done) => {
-    // Implement your GitHub authentication logic here
-    // For example, find or create a user in the database based on the GitHub profile
-    return done(null, profile); // Replace with actual user object on success
+  async (accessToken, refreshToken, profile, done) => {
+    try {
+      let user = await User.findOne({ githubId: profile.id });
+
+      if (!user) {
+        user = await User.create({
+          githubId: profile.id,
+          email: profile.emails?.[0]?.value || null,
+          displayName: profile.displayName || profile.username,
+          avatar: profile.photos?.[0].value
+        });
+      }
+
+      return done(null, user);
+    } catch (error) {
+      return done(error, false);
+    }
   }
 );
 
 passport.use(local);
 passport.use(google);
 passport.use(github);
+
+module.exports = passport;
