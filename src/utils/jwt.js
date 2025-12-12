@@ -1,9 +1,9 @@
 const jwt = require('jsonwebtoken');
 const { jwtSecret, jwtExpiresIn } = require('../config/config');
-const { prmosify } = require('util');
+const { promisify } = require('util');
 
-const signAsync = prmosify(jwt.sign);
-const verifyAsync = prmosify(jwt.verify);
+const signAsync = promisify(jwt.sign);
+const verifyAsync = promisify(jwt.verify);
 
 const generateToken = async (payload) => {
   return await signAsync(payload, jwtSecret, { expiresIn: jwtExpiresIn });

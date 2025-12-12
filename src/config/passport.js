@@ -66,6 +66,7 @@ const github = new GitHubStrategy(
       let user = await User.findOne({ githubId: profile.id });
 
       if (!user) {
+        console.log('profile :>> ', profile);
         user = await User.create({
           githubId: profile.id,
           email: profile.emails?.[0]?.value || null,

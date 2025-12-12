@@ -10,10 +10,10 @@ const userSchema = new mongoose.Schema(
     },
     googleId: { type: String },
     githubId: { type: String },
-    Avatar: { type: String },
+    avatar: { type: String },
     email: {
       type: String,
-      required: true,
+      required: [true, 'Email is required'],
       unique: true,
       lowercase: true,
       validate: [validator.isEmail, 'Please provide a valid email']
@@ -51,11 +51,10 @@ const userSchema = new mongoose.Schema(
 );
 
 // Hash password before saving
-userSchema.pre('save', async function (next) {
-  if (!this.isModified('password')) return next();
+userSchema.pre('save', async function () {
+  if (!this.isModified('password') || this.githubId || this.googleId) return;
   this.password = await bcrypt.hash(this.password, 12);
   this.confirmPassword = undefined;
-  next();
 });
 
 // Instance method to check password
