@@ -5,12 +5,19 @@ const passport = require('./config/passport');
 const authRouter = require('./routes/authRouter');
 const userRouter = require('./routes/userRouter');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
+const rateLimit = require('express-rate-limit');
 
 const app = express();
-
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // limit each IP to 100 requests per windowMs
+});
 // Middleware for logging HTTP requests
 app.use(morgan('dev'));
 app.use(cookieParser());
+app.use(helmet());
+app.use(limiter);
 app.use(passport.initialize());
 
 // Middleware for parsing JSON bodies
