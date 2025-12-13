@@ -3,6 +3,7 @@ const morgan = require('morgan');
 const sendEmail = require('./utils/email');
 const passport = require('./config/passport');
 const authRouter = require('./routes/authRouter');
+const userRouter = require('./routes/userRouter');
 const cookieParser = require('cookie-parser');
 
 const app = express();
@@ -14,6 +15,10 @@ app.use(passport.initialize());
 
 // Middleware for parsing JSON bodies
 app.use(express.json());
+app.use((req, res, next) => {
+  console.log('cookie :>> ', req.cookies);
+  next();
+});
 
 // Sample route
 app.get('/', async (req, res) => {
@@ -35,5 +40,6 @@ app.get('/login', (req, res) => {
 
 // Authentication routes
 app.use('/api/v1/auth', authRouter);
-
+// User routes
+app.use('/api/v1/users', userRouter);
 module.exports = app;
