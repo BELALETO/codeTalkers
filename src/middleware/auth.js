@@ -4,20 +4,29 @@ const catchAsync = require('../utils/catchAsync');
 const { verifyToken } = require('../utils/jwt');
 
 const protect = catchAsync(async (req, res, next) => {
-  console.log(req.headers);
   const token = req.cookies?.jwt;
 
   if (!token) {
     return next(new AppError('Unauthorized', 401));
   }
-  console.log('token extracted from cookie :>> ', token);
+
   const decoded = await verifyToken(token);
-  console.log('decoded :>> ', decoded);
-  const user = await User.findById(decoded.id);
-  console.log('user :>> ', user);
+  const user = await User.findById(decoded.id).select('+active');
+
   if (!user) {
     return next(new AppError("User doesn't exist☹️", 404));
   }
+
+  // Check if user account is still active
+  if (!user.active) {
+    return next(
+      new AppError(
+        'This account has been deactivated. Please contact support.',
+        401
+      )
+    );
+  }
+
   req.user = user;
   next();
 });

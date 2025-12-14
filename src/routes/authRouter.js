@@ -1,6 +1,12 @@
 const router = require('express').Router();
 const passport = require('passport');
-const { registerUser } = require('../controllers/authController');
+const {
+  registerUser,
+  getMe,
+  updateMe,
+  deleteMe
+} = require('../controllers/authController');
+const { protect } = require('../middleware/auth');
 const { sendCookie, clearCookie } = require('../utils/cookie');
 
 // Google OAuth routes
@@ -56,6 +62,11 @@ router.post(
 // Registration route (if needed)
 
 router.route('/register').post(registerUser);
+
+// Self-service account management routes (protected)
+router.get('/me', protect, getMe);
+router.patch('/update-me', protect, updateMe);
+router.delete('/delete-me', protect, deleteMe);
 
 // Logout route
 router.get('/logout', (req, res) => {

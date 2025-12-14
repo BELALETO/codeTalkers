@@ -66,5 +66,11 @@ userSchema.methods.correctPassword = async function (
   return await bcrypt.compare(candidatePassword, userPassword);
 };
 
+// Query middleware to exclude inactive users from results
+userSchema.pre(/^find/, function () {
+  // 'this' points to the current query
+  this.where('active').ne(false);
+});
+
 const User = mongoose.model('User', userSchema);
 module.exports = User;
