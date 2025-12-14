@@ -26,3 +26,11 @@ exports.registerUser = catchAsync(async (req, res, next) => {
     user: newUser
   });
 });
+
+exports.getMe = catchAsync(async (req, res, next) => {
+  const user = req.user;
+  res.status(200).json({
+    status: 'success',
+    user
+  });
+});

@@ -8,8 +8,8 @@ const userSchema = new mongoose.Schema(
       type: String,
       lowercase: true
     },
-    googleId: { type: String },
-    githubId: { type: String },
+    googleId: { type: String, unique: true },
+    githubId: { type: String, unique: true },
     avatar: { type: String },
     email: {
       type: String,
@@ -45,7 +45,8 @@ const userSchema = new mongoose.Schema(
     score: {
       type: Number,
       default: 0
-    }
+    },
+    active: { type: Boolean, default: true, select: false }
   },
   { timestamps: true, toJSON: { virtuals: true } }
 );
