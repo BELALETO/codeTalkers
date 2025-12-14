@@ -42,11 +42,13 @@ router.get(
 );
 
 // Local authentication route
+//TODO: enhence it by sending JSON instead of redirecting.
 router.post(
   '/login',
   passport.authenticate('local', { failureRedirect: '/login', session: false }),
-  (req, res) => {
+  async (req, res) => {
     // Successful authentication
+    await sendCookie(res, req.user);
     res.status(200).redirect('/dashboard');
   }
 );

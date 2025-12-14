@@ -11,8 +11,9 @@ const rateLimit = require('express-rate-limit');
 const app = express();
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
-  max: 100, // limit each IP to 100 requests per windowMs
+  max: 100 // limit each IP to 100 requests per windowMs
 });
+
 // Middleware for logging HTTP requests
 app.use(morgan('dev'));
 app.use(cookieParser());
@@ -22,10 +23,6 @@ app.use(passport.initialize());
 
 // Middleware for parsing JSON bodies
 app.use(express.json());
-app.use((req, res, next) => {
-  console.log('cookie :>> ', req.cookies);
-  next();
-});
 
 // Sample route
 app.get('/', async (req, res) => {
