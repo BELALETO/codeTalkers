@@ -6,6 +6,8 @@ const authRouter = require('./routes/authRouter');
 const userRouter = require('./routes/userRouter');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
+const AppError = require('./utils/appError');
+const errorController = require('./controllers/errorController');
 const rateLimit = require('express-rate-limit');
 
 const app = express();
@@ -46,4 +48,13 @@ app.get('/login', (req, res) => {
 app.use('/api/v1/auth', authRouter);
 // User routes
 app.use('/api/v1/users', userRouter);
+
+// Handle undefined routes (404)
+app.use((req, res, next) => {
+  next(new AppError(`Can't find ${req.originalUrl} on this server!`, 404));
+});
+
+// Global error handling middleware
+app.use(errorController);
+
 module.exports = app;
