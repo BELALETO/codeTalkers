@@ -33,7 +33,7 @@ const google = new GoogleStrategy(
   {
     clientID: googleClientID,
     clientSecret: googleClientSecret,
-    callbackURL: '/auth/google/callback'
+    callbackURL: '/api/v1/auth/google/callback'
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
@@ -59,7 +59,7 @@ const github = new GitHubStrategy(
   {
     clientID: githubClientID,
     clientSecret: githubClientSecret,
-    callbackURL: '/auth/github/callback'
+    callbackURL: '/api/v1/auth/github/callback'
   },
   async (accessToken, refreshToken, profile, done) => {
     try {
