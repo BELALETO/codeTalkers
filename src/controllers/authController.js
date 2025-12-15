@@ -1,24 +1,26 @@
-const User = require('../models/userModel');
-const AppError = require('../utils/appError');
+const authService = require('../services/authService');
 const catchAsync = require('../utils/catchAsync');
 const { sendCookie, clearCookie } = require('../utils/cookie');
+
+/**
+ * Authentication Controller
+ * Handles HTTP requests/responses for authentication endpoints
+ * Business logic is delegated to authService
+ */
 
 // Local registration controller
 exports.registerUser = catchAsync(async (req, res, next) => {
   const { email, password, confirmPassword, displayName } = req.body;
 
-  const existingUser = await User.findOne({ email });
-  if (existingUser) {
-    return next(new AppError('Email already in use.', 400));
-  }
-
-  const newUser = await User.create({
+  // Delegate business logic to service
+  const newUser = await authService.registerUser({
     email,
     password,
     confirmPassword,
     displayName
   });
 
+  // Handle HTTP response
   await sendCookie(res, newUser);
   res.status(201).json({
     status: 'success',
@@ -29,7 +31,10 @@ exports.registerUser = catchAsync(async (req, res, next) => {
 
 // Get current authenticated user
 exports.getMe = catchAsync(async (req, res, next) => {
-  const user = req.user;
+  // Delegate business logic to service
+  const user = await authService.getCurrentUser(req.user.id);
+
+  // Handle HTTP response
   res.status(200).json({
     status: 'success',
     data: {
@@ -40,32 +45,13 @@ exports.getMe = catchAsync(async (req, res, next) => {
 
 // Update current user (restricted fields)
 exports.updateMe = catchAsync(async (req, res, next) => {
-  // 1) Check if user tries to update password through this route
-  if (req.body.password || req.body.confirmPassword) {
-    return next(
-      new AppError(
-        'This route is not for password updates. Please use /update-password',
-        400
-      )
-    );
-  }
+  // Delegate business logic to service
+  const updatedUser = await authService.updateCurrentUser(
+    req.user.id,
+    req.body
+  );
 
-  // 2) Filter out unwanted fields that are not allowed to be updated
-  const allowedFields = ['displayName', 'email', 'avatar'];
-  const filteredBody = {};
-
-  Object.keys(req.body).forEach((key) => {
-    if (allowedFields.includes(key)) {
-      filteredBody[key] = req.body[key];
-    }
-  });
-
-  // 3) Update user document
-  const updatedUser = await User.findByIdAndUpdate(req.user.id, filteredBody, {
-    new: true,
-    runValidators: true
-  });
-
+  // Handle HTTP response
   res.status(200).json({
     status: 'success',
     data: {
@@ -76,11 +62,11 @@ exports.updateMe = catchAsync(async (req, res, next) => {
 
 // Soft delete current user
 exports.deleteMe = catchAsync(async (req, res, next) => {
-  await User.findByIdAndUpdate(req.user.id, { active: false });
+  // Delegate business logic to service
+  await authService.deactivateUser(req.user.id);
 
-  // Clear authentication cookie
+  // Handle HTTP response
   clearCookie(res);
-
   res.status(200).json({
     status: 'success',
     message: 'Account deactivated successfully',

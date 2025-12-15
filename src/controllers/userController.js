@@ -1,10 +1,17 @@
-const User = require('../models/userModel');
-const AppError = require('../utils/appError');
+const userService = require('../services/userService');
 const catchAsync = require('../utils/catchAsync');
 
+/**
+ * User Controller
+ * Handles HTTP requests/responses for user management endpoints
+ * Business logic is delegated to userService
+ */
+
 exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const users = await User.find();
-  //TODO: Implement filtering, sorting, field limiting, and pagination.
+  // Delegate business logic to service
+  const users = await userService.getAllUsers(req.query);
+
+  // Handle HTTP response
   res.status(200).json({
     status: 'success',
     results: users.length,
@@ -15,12 +22,10 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 });
 
 exports.getUser = catchAsync(async (req, res, next) => {
-  const user = await User.findById(req.params.id);
+  // Delegate business logic to service
+  const user = await userService.getUserById(req.params.id);
 
-  if (!user) {
-    return next(new AppError('No user found with that ID', 404));
-  }
-
+  // Handle HTTP response
   res.status(200).json({
     status: 'success',
     data: {
@@ -30,21 +35,10 @@ exports.getUser = catchAsync(async (req, res, next) => {
 });
 
 exports.updateUser = catchAsync(async (req, res, next) => {
-  const { avatar, displayName } = req.body;
-  const id = req.params.id;
-  const user = await User.findByIdAndUpdate(
-    id,
-    { avatar, displayName },
-    {
-      new: true,
-      runValidators: true
-    }
-  );
+  // Delegate business logic to service
+  const user = await userService.updateUser(req.params.id, req.body);
 
-  if (!user) {
-    return next(new AppError('No user found with that ID', 404));
-  }
-
+  // Handle HTTP response
   res.status(200).json({
     status: 'success',
     data: {
@@ -54,12 +48,10 @@ exports.updateUser = catchAsync(async (req, res, next) => {
 });
 
 exports.deleteUser = catchAsync(async (req, res, next) => {
-  const user = await User.findByIdAndDelete(req.params.id);
+  // Delegate business logic to service
+  await userService.deleteUser(req.params.id);
 
-  if (!user) {
-    return next(new AppError('No user found with that ID', 404));
-  }
-
+  // Handle HTTP response
   res.status(204).json({
     status: 'success',
     data: null
