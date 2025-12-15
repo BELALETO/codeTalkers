@@ -11,7 +11,7 @@ const transporter = nodemailer.createTransport({
 
 const sendEmail = async (to, subject, text, html) => {
   const mailOptions = {
-    from: senderEmail,
+    from: `"CodeTalkers" <${senderEmail}>`,
     to,
     subject,
     text,

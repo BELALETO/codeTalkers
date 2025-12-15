@@ -1,4 +1,5 @@
 const router = require('express').Router();
+const sendEmail = require('../utils/email')
 const passport = require('passport');
 const {
   registerUser,
@@ -24,6 +25,7 @@ router.get(
   async (req, res) => {
     // Successful authentication
     await sendCookie(res, req.user);
+    await sendEmail(req.user.email, 'Welcome to CodeTalkers', 'You have successfully logged in');
     res.status(200).redirect('/dashboard');
   }
 );
@@ -43,6 +45,7 @@ router.get(
   async (req, res) => {
     // Successful authentication
     await sendCookie(res, req.user);
+    await sendEmail(req.user.email, 'Welcome to CodeTalkers', 'You have successfully logged in');
     res.redirect('/dashboard');
   }
 );
@@ -55,6 +58,7 @@ router.post(
   async (req, res) => {
     // Successful authentication
     await sendCookie(res, req.user);
+    await sendEmail(req.user.email, 'Welcome to CodeTalkers', 'You have successfully logged in');
     res.status(200).redirect('/dashboard');
   }
 );
