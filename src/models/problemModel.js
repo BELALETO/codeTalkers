@@ -7,7 +7,7 @@ const problemSchema = new mongoose.Schema({
     },
     slug: {
         type: String,
-        required: [true, 'Problem must have a slug'],
+        unique: true,
     },
     description: {
         type: String,
