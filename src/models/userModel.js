@@ -48,7 +48,8 @@ const userSchema = new mongoose.Schema(
       default: 0
     },
     problemsSolved: {
-      type: [Problem],
+      type: mongoose.Schema.Types.ObjectId,
+      ref: 'Problem',
       default: []
     },
     active: { type: Boolean, default: true, select: false }
