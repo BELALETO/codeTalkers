@@ -1,4 +1,5 @@
 const mongoose = require('mongoose');
+const Problem = require('./problemModel');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
 
@@ -45,6 +46,10 @@ const userSchema = new mongoose.Schema(
     score: {
       type: Number,
       default: 0
+    },
+    problemsSolved: {
+      type: [Problem],
+      default: []
     },
     active: { type: Boolean, default: true, select: false }
   },
