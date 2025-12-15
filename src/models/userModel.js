@@ -48,7 +48,7 @@ const userSchema = new mongoose.Schema(
       default: 0
     },
     problemsSolved: {
-      type: mongoose.Schema.Types.ObjectId,
+      type: [mongoose.Schema.Types.ObjectId],
       ref: 'Problem',
       default: []
     },
