@@ -1,5 +1,5 @@
 const app = require('./app');
-const connectDB = require('./config/database');
+const { connectDB } = require('./config/database');
 const { port } = require('./config/config');
 
 // Track server instance for graceful shutdown

@@ -1,0 +1,227 @@
+
+[
+  {
+    "title": "Sum of Two Numbers",
+    "description": "Given two integers A and B, print their sum.",
+    "tags": ["math", "beginner"],
+    "difficulty": "easy",
+    "points": 50,
+    "starterCode": [
+      {
+        "language": "cpp",
+        "code": "int main(){int a,b;cin>>a>>b;cout<<a+b;}"
+      }
+    ],
+    "examples": [{ "input": "2 3", "output": "5", "explanation": "2 + 3 = 5" }]
+  },
+  {
+    "title": "Difference of Two Numbers",
+    "description": "Given two integers A and B, print A - B.",
+    "tags": ["math"],
+    "difficulty": "easy",
+    "points": 50,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int a,b;cin>>a>>b;cout<<a-b;}" }
+    ],
+    "examples": [{ "input": "5 3", "output": "2" }]
+  },
+  {
+    "title": "Product of Two Numbers",
+    "description": "Given two integers, print their product.",
+    "tags": ["math"],
+    "difficulty": "easy",
+    "points": 50,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){long long a,b;cin>>a>>b;cout<<a*b;}" }
+    ],
+    "examples": [{ "input": "4 6", "output": "24" }]
+  },
+  {
+    "title": "Check Even or Odd",
+    "description": "Determine whether a given number is even or odd.",
+    "tags": ["math", "condition"],
+    "difficulty": "easy",
+    "points": 75,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int n;cin>>n;}" }
+    ],
+    "examples": [{ "input": "7", "output": "ODD" }]
+  },
+  {
+    "title": "Maximum of Two Numbers",
+    "description": "Print the maximum of two integers.",
+    "tags": ["math", "condition"],
+    "difficulty": "easy",
+    "points": 75,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int a,b;cin>>a>>b;}" }
+    ],
+    "examples": [{ "input": "3 9", "output": "9" }]
+  },
+  {
+    "title": "Sum of Array",
+    "description": "Given an array of N integers, print the sum.",
+    "tags": ["array"],
+    "difficulty": "easy",
+    "points": 100,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int n;cin>>n;}" }
+    ],
+    "examples": [{ "input": "5\n1 2 3 4 5", "output": "15" }]
+  },
+  {
+    "title": "Maximum Element in Array",
+    "description": "Find the maximum element in an array.",
+    "tags": ["array"],
+    "difficulty": "easy",
+    "points": 100,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int n;cin>>n;}" }
+    ],
+    "examples": [{ "input": "4\n1 9 3 7", "output": "9" }]
+  },
+  {
+    "title": "Reverse a String",
+    "description": "Reverse the given string.",
+    "tags": ["string"],
+    "difficulty": "easy",
+    "points": 100,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){string s;cin>>s;}" }
+    ],
+    "examples": [{ "input": "hello", "output": "olleh" }]
+  },
+  {
+    "title": "Palindrome String",
+    "description": "Check whether a string is a palindrome.",
+    "tags": ["string"],
+    "difficulty": "easy",
+    "points": 120,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){string s;cin>>s;}" }
+    ],
+    "examples": [{ "input": "level", "output": "YES" }]
+  },
+  {
+    "title": "Count Digits",
+    "description": "Count the number of digits in a given integer.",
+    "tags": ["math"],
+    "difficulty": "easy",
+    "points": 120,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){long long n;cin>>n;}" }
+    ],
+    "examples": [{ "input": "12345", "output": "5" }]
+  },
+  {
+    "title": "Factorial",
+    "description": "Compute factorial of N.",
+    "tags": ["math", "loop"],
+    "difficulty": "medium",
+    "points": 150,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int n;cin>>n;}" }
+    ],
+    "examples": [{ "input": "5", "output": "120" }]
+  },
+  {
+    "title": "Fibonacci Number",
+    "description": "Print the Nth Fibonacci number.",
+    "tags": ["math", "dp"],
+    "difficulty": "medium",
+    "points": 150,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int n;cin>>n;}" }
+    ],
+    "examples": [{ "input": "7", "output": "13" }]
+  },
+  {
+    "title": "Check Power of Two",
+    "description": "Check whether a number is a power of two.",
+    "tags": ["bit-manipulation"],
+    "difficulty": "medium",
+    "points": 150,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){long long n;cin>>n;}" }
+    ],
+    "examples": [{ "input": "8", "output": "YES" }]
+  },
+  {
+    "title": "GCD of Two Numbers",
+    "description": "Compute GCD of two numbers.",
+    "tags": ["math"],
+    "difficulty": "medium",
+    "points": 160,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int a,b;cin>>a>>b;}" }
+    ],
+    "examples": [{ "input": "24 36", "output": "12" }]
+  },
+  {
+    "title": "LCM of Two Numbers",
+    "description": "Compute LCM of two numbers.",
+    "tags": ["math"],
+    "difficulty": "medium",
+    "points": 160,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int a,b;cin>>a>>b;}" }
+    ],
+    "examples": [{ "input": "4 6", "output": "12" }]
+  },
+  {
+    "title": "Linear Search",
+    "description": "Find the index of an element in an array.",
+    "tags": ["array", "search"],
+    "difficulty": "medium",
+    "points": 170,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int n,x;cin>>n;}" }
+    ],
+    "examples": [{ "input": "5\n1 2 3 4 5\n3", "output": "2" }]
+  },
+  {
+    "title": "Binary Search",
+    "description": "Find an element using binary search.",
+    "tags": ["array", "search"],
+    "difficulty": "medium",
+    "points": 180,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int n,x;cin>>n;}" }
+    ],
+    "examples": [{ "input": "5\n1 2 3 4 5\n4", "output": "3" }]
+  },
+  {
+    "title": "Count Vowels",
+    "description": "Count vowels in a string.",
+    "tags": ["string"],
+    "difficulty": "easy",
+    "points": 110,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){string s;getline(cin,s);}" }
+    ],
+    "examples": [{ "input": "hello", "output": "2" }]
+  },
+  {
+    "title": "Valid Parentheses",
+    "description": "Check if parentheses sequence is valid.",
+    "tags": ["stack"],
+    "difficulty": "hard",
+    "points": 250,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){string s;cin>>s;}" }
+    ],
+    "examples": [{ "input": "()[]{}", "output": "YES" }]
+  },
+  {
+    "title": "Two Sum",
+    "description": "Find two indices such that their sum equals target.",
+    "tags": ["array", "hashing"],
+    "difficulty": "hard",
+    "points": 300,
+    "starterCode": [
+      { "language": "cpp", "code": "int main(){int n,target;cin>>n;}" }
+    ],
+    "examples": [{ "input": "4\n2 7 11 15\n9", "output": "0 1" }]
+  }
+]
+
