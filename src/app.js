@@ -4,6 +4,7 @@ const sendEmail = require('./utils/email');
 const passport = require('./config/passport');
 const authRouter = require('./routes/authRouter');
 const userRouter = require('./routes/userRouter');
+const problemRouter = require('./routes/problemRouter');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 const AppError = require('./utils/appError');
@@ -48,6 +49,8 @@ app.get('/login', (req, res) => {
 app.use('/api/v1/auth', authRouter);
 // User routes
 app.use('/api/v1/users', userRouter);
+// Problem routes
+app.use('/api/v1/problems', problemRouter);
 
 // Handle undefined routes (404)
 app.use((req, res, next) => {
