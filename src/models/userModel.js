@@ -1,6 +1,7 @@
 const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const validator = require('validator');
+const crypto = require('crypto');
 
 const userSchema = new mongoose.Schema(
   {
@@ -51,7 +52,10 @@ const userSchema = new mongoose.Schema(
       ref: 'Problem',
       default: []
     },
-    active: { type: Boolean, default: true, select: false }
+    active: { type: Boolean, default: true, select: false },
+    passwordResetToken: String,
+    passwordResetExpires: Date,
+    passwordChangedAt: Date
   },
   { timestamps: true, toJSON: { virtuals: true } }
 );
@@ -63,12 +67,33 @@ userSchema.pre('save', async function () {
   this.confirmPassword = undefined;
 });
 
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password') || this.isNew) return next();
+
+  this.passwordChangedAt = Date.now() - 1000;
+  next();
+});
+
 // Instance method to check password
 userSchema.methods.correctPassword = async function (
   candidatePassword,
   userPassword
 ) {
   return await bcrypt.compare(candidatePassword, userPassword);
+};
+
+// Generate password reset token
+userSchema.methods.createPasswordResetToken = function () {
+  const resetToken = crypto.randomBytes(32).toString('hex');
+
+  this.passwordResetToken = crypto
+    .createHash('sha256')
+    .update(resetToken)
+    .digest('hex');
+
+  this.passwordResetExpires = Date.now() + 10 * 60 * 1000;
+
+  return resetToken;
 };
 
 // Query middleware to exclude inactive users from results

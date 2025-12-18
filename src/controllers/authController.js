@@ -73,3 +73,28 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
     data: null
   });
 });
+
+exports.forgotPassword = catchAsync(async (req, res, next) => {
+  await authService.forgotPassword(req.body.email, req.protocol, req.get('host'));
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Token sent to email!'
+  });
+});
+
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  const user = await authService.resetPassword(
+    req.params.token,
+    req.body.password,
+    req.body.confirmPassword
+  );
+
+  await sendCookie(res, user);
+
+  res.status(200).json({
+    status: 'success',
+    message: 'Password reset successfully',
+    data: { user }
+  });
+});

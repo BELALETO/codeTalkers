@@ -1,5 +1,7 @@
+const crypto = require('crypto');
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
+const sendEmail = require('../utils/email');
 
 /**
  * Authentication Service
@@ -103,11 +105,90 @@ const deactivateUser = async (userId) => {
   if (!user) {
     throw new AppError("User doesn't exist", 404);
   }
+
+};
+
+/**
+ * Handle forgotten password request
+ * @param {string} email - User email
+ * @param {string} protocol - Request protocol (http/https)
+ * @param {string} host - Request host
+ * @returns {Promise<void>}
+ * @throws {AppError} If user not found or email sending fails
+ */
+const forgotPassword = async (email, protocol, host) => {
+  // 1) Get user based on POSTed email
+  const user = await User.findOne({ email });
+  if (!user) {
+    throw new AppError('There is no user with email address.', 404);
+  }
+
+  // 2) Generate the random reset token
+  const resetToken = user.createPasswordResetToken();
+  await user.save({ validateBeforeSave: false });
+
+  // 3) Send it to user's email
+  const resetURL = `${protocol}://${host}/reset-password/${resetToken}`; // Current frontend URL structure assumption.
+  // Ideally this should be an env var pointing to frontend logic, but usually for these tasks we can assume path.
+
+  const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
+
+  try {
+    await sendEmail(email, 'Your password reset token (valid for 10 min)', message);
+  } catch (err) {
+    user.passwordResetToken = undefined;
+    user.passwordResetExpires = undefined;
+    await user.save({ validateBeforeSave: false });
+
+    throw new AppError(
+      'There was an error sending the email. Try again later!',
+      500
+    );
+  }
+};
+
+/**
+ * Reset password using token
+ * @param {string} token - Reset token
+ * @param {string} password - New password
+ * @param {string} confirmPassword - Confirm new password
+ * @returns {Promise<Object>} Updated user
+ * @throws {AppError} If token is invalid or expired
+ */
+const resetPassword = async (token, password, confirmPassword) => {
+  
+  // 1) Get user based on the token
+  const hashedToken = crypto
+    .createHash('sha256')
+    .update(token)
+    .digest('hex');
+
+  const user = await User.findOne({
+    passwordResetToken: hashedToken,
+    passwordResetExpires: { $gt: Date.now() }
+  });
+
+  // 2) If token has not expired, and there is user, set the new password
+  if (!user) {
+    throw new AppError('Token is invalid or has expired', 400);
+  }
+
+  user.password = password;
+  user.confirmPassword = confirmPassword;
+  user.passwordResetToken = undefined;
+  user.passwordResetExpires = undefined;
+  await user.save();
+
+
+
+  return user;
 };
 
 module.exports = {
   registerUser,
   getCurrentUser,
   updateCurrentUser,
-  deactivateUser
+  deactivateUser,
+  forgotPassword,
+  resetPassword
 };

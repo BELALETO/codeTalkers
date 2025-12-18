@@ -5,7 +5,9 @@ const {
   registerUser,
   getMe,
   updateMe,
-  deleteMe
+  deleteMe,
+  forgotPassword,
+  resetPassword
 } = require('../controllers/authController');
 const { protect } = require('../middleware/auth');
 const { sendCookie, clearCookie } = require('../utils/cookie');
@@ -66,6 +68,8 @@ router.post(
 // Registration route (if needed)
 
 router.route('/register').post(registerUser);
+router.post('/forgotPassword', forgotPassword);
+router.patch('/resetPassword/:token', resetPassword);
 
 // Self-service account management routes (protected)
 router.get('/me', protect, getMe);
