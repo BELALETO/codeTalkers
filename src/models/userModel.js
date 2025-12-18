@@ -67,11 +67,10 @@ userSchema.pre('save', async function () {
   this.confirmPassword = undefined;
 });
 
-userSchema.pre('save', function (next) {
-  if (!this.isModified('password') || this.isNew) return next();
+userSchema.pre('save', async function () {
+  if (!this.isModified('password') || this.isNew) return;
 
   this.passwordChangedAt = Date.now() - 1000;
-  next();
 });
 
 // Instance method to check password
