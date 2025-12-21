@@ -11,7 +11,10 @@
     "lint": "eslint . ",
     "lint:fix": "eslint . --fix ",
     "import:problems": "node ./src/data/import.js --import",
-    "delete:problems": "node ./src/data/import.js --delete"
+    "delete:problems": "node ./src/data/import.js --delete",
+    "redis:start": "docker start redis || docker run -d --name redis -p 6379:6379 redis:7",
+    "redis:stop": "docker stop redis",
+    "dev": "npm run redis:start && npm start"
   },
   "keywords": [],
   "author": "",
