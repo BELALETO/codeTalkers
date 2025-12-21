@@ -1,6 +1,7 @@
 const Problem = require('../models/problemModel');
 const catchAsync = require('../utils/catchAsync');
 const AppError = require('../utils/appError');
+const APIFeatures = require('../utils/apiFeatures');
 const cache = require('../utils/cache');
 
 const getAllProblems = catchAsync(async (req, res, next) => {
@@ -17,7 +18,13 @@ const getAllProblems = catchAsync(async (req, res, next) => {
         });
     }
 
-    const problems = await Problem.find();
+    const features = new APIFeatures(Problem.find(), req.query)
+        .filter()
+        .sort()
+        .limitFields()
+        .paginate();
+
+    const problems = await features.query;
 
     await cache.set(key, problems, 3600);
 

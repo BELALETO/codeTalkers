@@ -1,5 +1,6 @@
 const User = require('../models/userModel');
 const AppError = require('../utils/appError');
+const APIFeatures = require('../utils/apiFeatures');
 
 /**
  * User Service
@@ -12,9 +13,13 @@ const AppError = require('../utils/appError');
  * @returns {Promise<Array>} Array of users
  */
 const getAllUsers = async (queryOptions = {}) => {
-  // TODO: Implement filtering, sorting, field limiting, and pagination
-  // For now, return all users
-  const users = await User.find();
+  const features = new APIFeatures(User.find(), queryOptions)
+    .filter()
+    .sort()
+    .limitFields()
+    .paginate();
+
+  const users = await features.query;
   return users;
 };
 
