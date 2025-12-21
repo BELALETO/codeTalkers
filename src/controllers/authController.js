@@ -1,6 +1,7 @@
 const authService = require('../services/authService');
 const catchAsync = require('../utils/catchAsync');
 const { sendCookie, clearCookie } = require('../utils/cookie');
+const cache = require('../utils/cache');
 
 /**
  * Authentication Controller
@@ -31,17 +32,35 @@ exports.registerUser = catchAsync(async (req, res, next) => {
 
 // Get current authenticated user
 exports.getMe = catchAsync(async (req, res, next) => {
-  // Delegate business logic to service
-  const user = await authService.getCurrentUser(req.user.id);
+  const userId = req.user._id;
+  const cacheKey = `user:me:${userId}`;
 
-  // Handle HTTP response
+  // 1. Try cache
+  const cachedUser = await cache.get(cacheKey);
+  if (cachedUser) {
+    return res.status(200).json({
+      status: 'success',
+      data: {
+        user: JSON.parse(cachedUser),
+      },
+    });
+  }
+
+  // 2. Fallback to DB
+  const user = await authService.getCurrentUser(userId);
+
+  // 3. Store in Redis (TTL: 5 minutes)
+  await cache.set(cacheKey, user, 300);
+
+  // 4. Respond
   res.status(200).json({
     status: 'success',
     data: {
-      user
-    }
+      user,
+    },
   });
 });
+
 
 // Update current user (restricted fields)
 exports.updateMe = catchAsync(async (req, res, next) => {
