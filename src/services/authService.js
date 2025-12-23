@@ -105,7 +105,6 @@ const deactivateUser = async (userId) => {
   if (!user) {
     throw new AppError("User doesn't exist", 404);
   }
-
 };
 
 /**
@@ -134,7 +133,11 @@ const forgotPassword = async (email, protocol, host) => {
   const message = `Forgot your password? Submit a PATCH request with your new password and passwordConfirm to: ${resetURL}.\nIf you didn't forget your password, please ignore this email!`;
 
   try {
-    await sendEmail(email, 'Your password reset token (valid for 10 min)', message);
+    await sendEmail(
+      email,
+      'Your password reset token (valid for 10 min)',
+      message
+    );
   } catch (err) {
     user.passwordResetToken = undefined;
     user.passwordResetExpires = undefined;
@@ -156,12 +159,8 @@ const forgotPassword = async (email, protocol, host) => {
  * @throws {AppError} If token is invalid or expired
  */
 const resetPassword = async (token, password, confirmPassword) => {
-  
   // 1) Get user based on the token
-  const hashedToken = crypto
-    .createHash('sha256')
-    .update(token)
-    .digest('hex');
+  const hashedToken = crypto.createHash('sha256').update(token).digest('hex');
 
   const user = await User.findOne({
     passwordResetToken: hashedToken,
@@ -178,8 +177,6 @@ const resetPassword = async (token, password, confirmPassword) => {
   user.passwordResetToken = undefined;
   user.passwordResetExpires = undefined;
   await user.save();
-
-
 
   return user;
 };

@@ -12,7 +12,8 @@ const testCaseSchema = new mongoose.Schema({
     type: String, // Or S3 URL for large outputs
     required: true
   },
-  isPublic: { // If true, visible to user (e.g. sample cases)
+  isPublic: {
+    // If true, visible to user (e.g. sample cases)
     type: Boolean,
     default: false
   },

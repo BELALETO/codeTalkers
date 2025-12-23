@@ -41,8 +41,8 @@ exports.getMe = catchAsync(async (req, res, next) => {
     return res.status(200).json({
       status: 'success',
       data: {
-        user: JSON.parse(cachedUser),
-      },
+        user: JSON.parse(cachedUser)
+      }
     });
   }
 
@@ -56,11 +56,10 @@ exports.getMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      user,
-    },
+      user
+    }
   });
 });
-
 
 // Update current user (restricted fields)
 exports.updateMe = catchAsync(async (req, res, next) => {
@@ -94,7 +93,11 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
 });
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-  await authService.forgotPassword(req.body.email, req.protocol, req.get('host'));
+  await authService.forgotPassword(
+    req.body.email,
+    req.protocol,
+    req.get('host')
+  );
 
   res.status(200).json({
     status: 'success',
