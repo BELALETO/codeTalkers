@@ -1,3 +1,5 @@
+const mongoose = require('mongoose');
+
 const testCaseSchema = new mongoose.Schema({
   problem: {
     type: mongoose.Schema.ObjectId,
