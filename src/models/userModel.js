@@ -60,6 +60,32 @@ const userSchema = new mongoose.Schema(
   { timestamps: true, toJSON: { virtuals: true } }
 );
 
+// Calculate rank based on score
+userSchema.pre('save', async function () {
+  if (!this.isModified('score')) return;
+
+  if (this.score <= 200) {
+    this.rank = 'bronze';
+  } else if (this.score > 200 && this.score <= 800) {
+    this.rank = 'silver';
+  } else if (this.score > 800 && this.score <= 1600) {
+    this.rank = 'gold';
+  } else {
+    this.rank = 'platinum';
+  }
+});
+
+// Instance method to update score and solved problems
+userSchema.methods.solveProblem = async function (problemId, points) {
+  this.score += points;
+
+  if (!this.problemsSolved.includes(problemId)) {
+    this.problemsSolved.push(problemId);
+  }
+
+  return await this.save();
+};
+
 // Hash password before saving
 userSchema.pre('save', async function () {
   if (!this.isModified('password') || this.githubId || this.googleId) return;
