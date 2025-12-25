@@ -1,0 +1,28 @@
+services:
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+
+  mongo:
+    image: mongo:6
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+
+  worker:
+    build:
+      context: .
+      dockerfile: Dockerfile.worker
+    depends_on:
+      - redis
+      - mongo
+    environment:
+      - MONGO_URI=mongodb://mongo:27017/codetalkers
+      - REDIS_HOST=redis
+    volumes:
+      - ./temp:/usr/src/app/temp
+
+volumes:
+  mongo_data:

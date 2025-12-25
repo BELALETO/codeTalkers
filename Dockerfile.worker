@@ -1,0 +1,14 @@
+FROM node:20-alpine
+
+# Install build dependencies (g++, make, python3)
+# We strictly need g++ for the C++ worker, but build-base includes other useful build tools
+RUN apk add --no-cache build-base
+
+WORKDIR /usr/src/app
+
+COPY package*.json ./
+RUN npm ci --only=production
+
+COPY . .
+
+CMD ["node", "src/start_worker.js"]
