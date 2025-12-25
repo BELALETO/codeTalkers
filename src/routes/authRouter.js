@@ -67,13 +67,19 @@ router.post(
   passport.authenticate('local', { failureRedirect: '/login', session: false }),
   async (req, res) => {
     // Successful authentication
-    await sendCookie(res, req.user);
+    const token = await sendCookie(res, req.user);
     await sendEmail(
       req.user.email,
       'Welcome to CodeTalkers',
       'You have successfully logged in'
     );
-    res.status(200).redirect('/dashboard');
+    res.status(200).json({
+      status: 'success',
+      token,
+      data: {
+        user: req.user
+      }
+    });
   }
 );
 

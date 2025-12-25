@@ -74,9 +74,8 @@ problemSchema.virtual('testCases', {
   localField: '_id'
 });
 
-problemSchema.pre('save', function (next) {
+problemSchema.pre('save', function () {
   this.slug = slugify(this.title, { lower: true });
-  next();
 });
 const Problem = mongoose.model('Problem', problemSchema);
 module.exports = Problem;

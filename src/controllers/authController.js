@@ -22,9 +22,10 @@ exports.registerUser = catchAsync(async (req, res, next) => {
   });
 
   // Handle HTTP response
-  await sendCookie(res, newUser);
+  const token = await sendCookie(res, newUser);
   res.status(201).json({
     status: 'success',
+    token,
     message: 'User registered successfully',
     user: newUser
   });
